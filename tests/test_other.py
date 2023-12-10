@@ -1,5 +1,5 @@
 import pytest as pt
-from bambu import bambu 
+from bambu import api 
 from functools import partial
 from bambu.camel import underscore_keys
 
@@ -9,16 +9,16 @@ cfg = read_config('.env')
 DOMAIN = cfg.get('DOMAIN')
 TOKEN = cfg.get('TOKEN')
 
-create_api = partial(bambu.create_api, subdomain=DOMAIN, api_key=TOKEN)
+create_api = partial(api.create_api, subdomain=DOMAIN, api_key=TOKEN)
 
 @pt.mark.asyncio
 async def test_capacity() -> None:
-    api: bambu.APIv1 = create_api()
-    async with api:
+    bamboo: api.APIv1 = create_api()
+    async with bamboo:
         # params = {'start': '2023-11-01', 'end': '2023-11-30', 'employeeId': 4133}
         # r = await api.get_time_off_requests(params)
 
-        r = await api.get_time_off_requests(employee_id=4133, start_date='2023-11-01', end_date='2023-11-30')
+        r = await bamboo.get_time_off_requests(employee_id=4133, start_date='2023-11-01', end_date='2023-11-30')
         assert r is not None
         print(f'api.get_time_off_requests = {r}')
 
