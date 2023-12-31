@@ -1,7 +1,6 @@
 import asyncio
 import enum
 from abc import ABC
-from abc import abstractmethod
 from urllib.parse import urlencode
 
 import aiohttp
@@ -24,21 +23,18 @@ class APIBase(ABC):
     @property
     def base_url(self) -> str:
         base_url = read_config('.env').get('BASE_URL')
-        return (
-            f'{base_url}{self.subdomain}'
-        )
+        return f'{base_url}{self.subdomain}'
 
     def url_for(self, method: Methods, *, api_version: str = 'v1', **kwargs) -> str:
         base_url = read_config('.env').get('BASE_URL')
         m = method.format(**kwargs)
-        return (
-            f'{base_url}{self.subdomain}/{api_version}/{m}'
-        )
-
+        return f'{base_url}{self.subdomain}/{api_version}/{m}'
 
     async def _get(self, method: str, params: Params, api_version: str = 'v1') -> dict:
         assert method is not None
-        url = '{}/{}/{}?{}'.format(self.base_url, api_version, method, urlencode(params))
+        url = '{}/{}/{}?{}'.format(
+            self.base_url, api_version, method, urlencode(params)
+        )
         async with self._session.get(url, timeout=35) as response:
             if response.status == 200:
                 r = await response.json()
