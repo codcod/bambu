@@ -6,6 +6,8 @@ from urllib.parse import urlencode
 
 import aiohttp
 
+from .config import read_config
+
 Params = dict[str, str]
 
 
@@ -14,26 +16,29 @@ class Methods(enum.StrEnum):
     GET_TIME_OFF_REQUESTS = 'time_off/requests'
 
 
-class API(ABC):
+class APIBase(ABC):
     def __init__(self, *, subdomain: str, api_key: str):
         self.subdomain = subdomain
         self.api_key = api_key
 
     @property
-    @abstractmethod
-    def api_version(self) -> str:
-        raise NotImplementedError
-
-    @property
     def base_url(self) -> str:
+        base_url = read_config('.env').get('BASE_URL')
         return (
-            f'https://api.bamboohr.com/api/gateway.php/'
-            f'{self.subdomain}/{self.api_version}'
+            f'{base_url}{self.subdomain}'
         )
 
-    async def _get(self, method: str, params: Params) -> dict:
+    def url_for(self, method: Methods, *, api_version: str = 'v1', **kwargs) -> str:
+        base_url = read_config('.env').get('BASE_URL')
+        m = method.format(**kwargs)
+        return (
+            f'{base_url}{self.subdomain}/{api_version}/{m}'
+        )
+
+
+    async def _get(self, method: str, params: Params, api_version: str = 'v1') -> dict:
         assert method is not None
-        url = '{}/{}?{}'.format(self.base_url, method, urlencode(params))
+        url = '{}/{}/{}?{}'.format(self.base_url, api_version, method, urlencode(params))
         async with self._session.get(url, timeout=35) as response:
             if response.status == 200:
                 r = await response.json()
@@ -49,14 +54,10 @@ class API(ABC):
         await self._session.close()
 
 
-class APIv1(API):
+class API(APIBase):
     def __init__(self, *, subdomain: str, api_key: str):
         self.headers = {'Accept': 'application/json'}
         super().__init__(subdomain=subdomain, api_key=api_key)
-
-    @property
-    def api_version(self) -> str:
-        return 'v1'
 
     async def get_employee(
         self,
@@ -104,5 +105,5 @@ class APIv1(API):
         return r
 
 
-def create_api(subdomain: str, api_key: str) -> API:
-    return APIv1(subdomain=subdomain, api_key=api_key)
+def create_api(subdomain: str, api_key: str) -> APIBase:
+    return API(subdomain=subdomain, api_key=api_key)

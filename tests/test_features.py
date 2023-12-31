@@ -12,8 +12,8 @@ TOKEN = cfg.get('TOKEN')
 create_api = partial(api.create_api, subdomain=DOMAIN, api_key=TOKEN)
 
 @pt.mark.asyncio
-async def test_capacity() -> None:
-    bamboo: api.APIv1 = create_api()
+async def _test_capacity() -> None:
+    bamboo: api.API = create_api()
     async with bamboo:
         # params = {'start': '2023-11-01', 'end': '2023-11-30', 'employeeId': 4133}
         # r = await api.get_time_off_requests(params)
