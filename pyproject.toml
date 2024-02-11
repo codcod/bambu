@@ -7,10 +7,10 @@ authors = [
 ]
 dependencies = [
     "requests>=2.31.0",
-    "aiohttp>=3.9.0",
+    "aiohttp>=3.9.3",
 ]
 readme = "README.md"
-requires-python = ">= 3.8"
+requires-python = ">= 3.12"
 
 [build-system]
 requires = ["hatchling"]
@@ -19,16 +19,19 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = [
-    "black>=23.11.0",
-    "isort>=5.12.0",
-    "mypy>=1.7.1",
-    "pylint>=3.0.2",
-    "ruff>=0.1.6",
+    "black>=24.1.1",
+    "isort>=5.13.2",
+    "mypy>=1.8.0",
+    "pylint>=3.0.3",
+    "ruff>=0.2.1",
     "pytest-asyncio>=0.21.1",
     "pytest>=7.4.3",
     "pytest-cov>=4.1.0",
     "radon>=6.0.1",
     "pook>=1.4.0",
+    "flake8>=5.0.4",
+    "pytest-coverage>=0.0",
+    "cyclonedx-bom>=4.1.1",
 ]
 
 [tool.rye.scripts]
@@ -68,8 +71,8 @@ force_single_line = true
 known_first_party = ["bambu"]
 
 [tool.ruff]
-fixable = ["ALL"]
-unfixable = []
+lint.fixable = ["ALL"]
+lint.unfixable = []
 exclude = [
     ".git",
     ".mypy_cache",
@@ -80,7 +83,7 @@ exclude = [
     "dist",
 ]
 line-length = 88
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 target-version = "py310"
 
 [tool.pydocstyle]

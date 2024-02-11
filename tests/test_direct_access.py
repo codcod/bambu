@@ -1,3 +1,4 @@
+# pylint: disable=C0114,C0115,C0116
 import pytest as pt
 from bambu import api 
 from functools import partial
@@ -19,7 +20,6 @@ async def test_get_employee_existing() -> None:
     async with bamboo:
         fields = 'firstName,lastName,employeeNumber,ssn'  # ',departament'
         empl = await bamboo.get_employee(id=4529, fields=fields)
-        
         assert empl is not None
         for field in fields.split(','):
             assert field in empl

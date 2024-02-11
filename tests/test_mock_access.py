@@ -1,4 +1,5 @@
 # flake8: noqa
+# pylint: disable=C0114,C0115,C0116
 import json
 from functools import partial
 
@@ -93,11 +94,10 @@ async def test_get_employee_existing(resp_employee) -> None:
         response_type='json',
         response_json=resp_employee
     )
-    
+
     async with bamboo:
         fields = 'firstName,lastName,employeeNumber,ssn'
         empl = await bamboo.get_employee(id=4529, fields=fields)
-        
         assert empl is not None
         for field in fields.split(','):
             assert field in empl
@@ -120,7 +120,7 @@ async def test_get_time_off_requests(resp_time_off) -> None:
         r = await bamboo.get_time_off_requests(
             employee_id=1,
             start_date='2023-11-01',
-            end_date='2023-11-30'        
+            end_date='2023-11-30'
         )
         assert r is not None
         assert r == resp_time_off

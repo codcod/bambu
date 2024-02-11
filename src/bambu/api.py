@@ -1,3 +1,4 @@
+# pylint: disable=C0114,C0115,C0116
 import asyncio
 import enum
 from abc import ABC
@@ -19,6 +20,9 @@ class APIBase(ABC):
     def __init__(self, *, subdomain: str, api_key: str):
         self.subdomain = subdomain
         self.api_key = api_key
+        self._session = None
+        # self.headers = {'Authorization': f'Basic {api_key}'}
+        self.headers = {'Accept': 'application/json'}
 
     @property
     def base_url(self) -> str:
@@ -51,9 +55,6 @@ class APIBase(ABC):
 
 
 class API(APIBase):
-    def __init__(self, *, subdomain: str, api_key: str):
-        self.headers = {'Accept': 'application/json'}
-        super().__init__(subdomain=subdomain, api_key=api_key)
 
     async def get_employee(
         self,

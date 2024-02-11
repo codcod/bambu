@@ -2,6 +2,7 @@
 Inspired by:
 https://github.com/smeggingsmegger/PyBambooHR/blob/master/PyBambooHR/utils.py
 """
+
 import re
 
 
