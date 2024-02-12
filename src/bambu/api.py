@@ -55,7 +55,6 @@ class APIBase(ABC):
 
 
 class API(APIBase):
-
     async def get_employee(
         self,
         *,

@@ -19,11 +19,8 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = [
-    "black>=24.1.1",
-    "isort>=5.13.2",
     "mypy>=1.8.0",
     "pylint>=3.0.3",
-    "ruff>=0.2.1",
     "pytest-asyncio>=0.21.1",
     "pytest>=7.4.3",
     "pytest-cov>=4.1.0",
@@ -35,33 +32,28 @@ dev-dependencies = [
 ]
 
 [tool.rye.scripts]
-lint = { chain = [
-    "lint:isort",
-    "lint:black",
-    "lint:ruff"
+mylint = { chain = [
+    "mylint:pylint",
 ]}
-"lint:isort" = "isort src/"
-"lint:black" = "black src/"
-"lint:ruff" = "ruff src/"
-
-"check:radon" = "radon cc src/ -a -nc"  # to run it remove log_* entries from [tool.pytest.ini_options]
+"mylint:pylint" = "pylint src/"
+"mylint:radon" = "radon cc src/ -a -nc"  # to run it remove log_* entries from [tool.pytest.ini_options]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.black]
-line-length = 88
-skip-string-normalization = 1
-target-version = ["py310"]
-include = '\.pyi?$'
-extend-exclude = '''
-# A regex preceded with ^/ will apply only to files and directories
-# in the root of the project.
-(
-  ^/foo.py       # exclude a file named foo.py in the root of the project
-  | settings.py  # exclude settings file anywhere in the project
-)
-'''
+# [tool.black]
+# line-length = 88
+# skip-string-normalization = true
+# target-version = ["py310"]
+# include = '\.pyi?$'
+# extend-exclude = '''
+# # A regex preceded with ^/ will apply only to files and directories
+# # in the root of the project.
+# (
+#   ^/foo.py       # exclude a file named foo.py in the root of the project
+#   | settings.py  # exclude settings file anywhere in the project
+# )
+# '''
 
 [tool.isort]
 profile = "black"
@@ -71,8 +63,6 @@ force_single_line = true
 known_first_party = ["bambu"]
 
 [tool.ruff]
-lint.fixable = ["ALL"]
-lint.unfixable = []
 exclude = [
     ".git",
     ".mypy_cache",
@@ -83,8 +73,18 @@ exclude = [
     "dist",
 ]
 line-length = 88
-lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "W", "E", "B", "I", "PL", "C90"]
+ignore = []
+
+fixable = ["ALL"]
+unfixable = ["B"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "single"
 
 [tool.pydocstyle]
 ignore = [

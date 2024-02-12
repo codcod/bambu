@@ -6,7 +6,7 @@ from functools import partial
 import pytest as pt
 import pook
 
-from bambu import api 
+from bambu import api
 from bambu.camel import camelcase_keys, underscore_keys
 from bambu.config import read_config
 
@@ -14,7 +14,7 @@ ACCESS_MODE = 'DIRECT'
 
 cfg = read_config('.env')
 
-DOMAIN =  'testdomain'
+DOMAIN = 'testdomain'
 TOKEN = 'testtoken'
 BASE_URL = 'https://api.bamboohr.com/api/gateway.php/' + DOMAIN
 
@@ -28,13 +28,14 @@ def resp_employee():
         'firstName': 'Tester',
         'lastName': 'Tester',
         'employeeNumber': '4526',
-        'ssn': None
+        'ssn': None,
     }
+
 
 @pt.fixture
 def resp_time_off():
     return json.loads(
-        '''
+        """
         [
             {
                 "id": "1",
@@ -79,7 +80,7 @@ def resp_time_off():
                 }
             }
         ]
-        '''
+        """
     )
 
 
@@ -92,7 +93,7 @@ async def test_get_employee_existing(resp_employee) -> None:
         bamboo.url_for(api.Methods.GET_EMPLOYEE, id=4529),
         reply=200,
         response_type='json',
-        response_json=resp_employee
+        response_json=resp_employee,
     )
 
     async with bamboo:
@@ -113,14 +114,12 @@ async def test_get_time_off_requests(resp_time_off) -> None:
         bamboo.url_for(api.Methods.GET_TIME_OFF_REQUESTS),
         reply=200,
         response_type='json',
-        response_json=resp_time_off
+        response_json=resp_time_off,
     )
 
     async with bamboo:
         r = await bamboo.get_time_off_requests(
-            employee_id=1,
-            start_date='2023-11-01',
-            end_date='2023-11-30'
+            employee_id=1, start_date='2023-11-01', end_date='2023-11-30'
         )
         assert r is not None
         assert r == resp_time_off

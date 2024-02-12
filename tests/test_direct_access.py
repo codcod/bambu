@@ -1,9 +1,8 @@
 # pylint: disable=C0114,C0115,C0116
-import pytest as pt
-from bambu import api 
 from functools import partial
 
-from bambu.camel import camelcase_keys, underscore_keys
+import pytest as pt
+from bambu import api
 from bambu.config import read_config
 
 cfg = read_config('.env')
@@ -26,6 +25,7 @@ async def test_get_employee_existing() -> None:
         assert empl.get('id') == '4529'
         assert empl.get('employeeNumber') == '4526'
 
+
 @pt.mark.asyncio
 async def test_get_employee_nonexisting() -> None:
     bamboo: api.API = create_api()
@@ -33,14 +33,13 @@ async def test_get_employee_nonexisting() -> None:
         empl = await bamboo.get_employee(id=100_000)
         assert empl is None
 
+
 @pt.mark.asyncio
 async def test_get_time_off_requests() -> None:
     bamboo: api.API = create_api()
     async with bamboo:
         r = await bamboo.get_time_off_requests(
-            employee_id=4133,
-            start_date='2023-11-01',
-            end_date='2023-11-30'
+            employee_id=4133, start_date='2023-11-01', end_date='2023-11-30'
         )
         assert r is not None
         print(f'api.get_time_off_requests for employee_id=4133 = {r}')
